@@ -1,8 +1,11 @@
 #pragma once
 #include "random_generator.h"
 #include "npc.h"
+#include <memory>
+#include <string>
+#include <vector>
 
-enum class NPC {elf, knight, rogue};
+enum NpcType {elf, knight, rogue};
 
 class NpcFactory
 {
@@ -11,19 +14,15 @@ private:
     int size_x;
     int size_y;
     double attack_range;
-
-    int get_position_x(void)
-    {
-        return rng.get_int(0, size_x);
-    }
-
-    int get_position_y(void)
-    {
-        return rng.get_int(0, size_y);
-    }
+    int counter[3];
+    int get_position_x(void);
+    int get_position_y(void);
+    std::string get_uname(std::string base_name);
 
 public:
     NpcFactory();
     NpcFactory(double attack_range, int size_x, int size_y);
-    BaseNPC* factory_method(const NPC& npc);
+    std::shared_ptr<BaseNPC> create_npc(const NpcType& npc);
+    void save_to_file(std::vector<std::shared_ptr<BaseNPC>>& npcs, std::string& filename);
+    std::vector<std::shared_ptr<BaseNPC>> load_from_file(std::string& filename);
 };

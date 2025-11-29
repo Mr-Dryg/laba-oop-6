@@ -1,24 +1,15 @@
 #include "../include/npc.h"
+#include "../include/visitor.h"
 
 Knight::Knight(std::string name, int x, int y, double attack_range)
     : BaseNPC(name, x, y, attack_range) {};
 
-void Knight::say_hello(void)
+void Knight::accept(Visitor& visitor)
 {
-    _say_hello("Knight");
+    visitor.visit(*this);
 }
 
-bool Knight::defeat(Elf &other)
+std::ostream& operator<<(std::ostream& os, const Knight& npc)
 {
-    return false;
-}
-
-bool Knight::defeat(Knight& other)
-{
-    return false;
-}
-
-bool Knight::defeat(Rogue& other)
-{
-    return is_near(other);
+    return os << "[Knight]" << static_cast<BaseNPC>(npc);
 }

@@ -1,16 +1,17 @@
 #pragma once
 #include <cmath>
 #include <iostream>
+#include <ostream>
+#include <random>
 #include <string>
+#include <system_error>
 
-class Elf;
-class Knight;
-class Rogue;
+class Visitor;
 
 class BaseNPC
 {
 private:
-    using Position = struct {
+    struct Position{
         int x;
         int y;
     };
@@ -19,42 +20,36 @@ private:
 protected:
     Position position;
     std::string name;
-    double attack_range;
 
 public:
     BaseNPC(std::string name, int x, int y, double attack_range);
-    void _say_hello(std::string _class);
-    bool is_near(BaseNPC& other);
-    virtual void say_hello(void) =0;
-    virtual bool defeat(BaseNPC& other);
+    bool is_near(BaseNPC& other, double attack_range);
+    void set_attack_range(double attack_range);
+    friend std::ostream& operator<<(std::ostream& os, const Position& position);
+    friend std::ostream& operator<<(std::ostream& os, const BaseNPC& npc);
+    virtual void accept(Visitor& visitor);
 };
 
 class Elf : public BaseNPC
 {
 public:
     Elf(std::string name, int x, int y, double attack_range);
-    void say_hello(void) override;
-    bool defeat(Elf& other);
-    bool defeat(Knight& other);
-    bool defeat(Rogue& other);
+    friend std::ostream& operator<<(std::ostream& os, const Elf& npc);
+    void accept(Visitor& visitor) override;
 };
 
 class Knight : public BaseNPC
 {
 public:
     Knight(std::string name, int x, int y, double attack_range);
-    void say_hello(void) override;
-    bool defeat(Elf& other);
-    bool defeat(Knight& other);
-    bool defeat(Rogue& other);
+    friend std::ostream& operator<<(std::ostream& os, const Knight& npc);
+    void accept(Visitor& visitor) override;
 };
 
 class Rogue : public BaseNPC
 {
 public:
     Rogue(std::string name, int x, int y, double attack_range);
-    void say_hello(void) override;
-    bool defeat(Elf& other);
-    bool defeat(Knight& other);
-    bool defeat(Rogue& other);
+    friend std::ostream& operator<<(std::ostream& os, const Rogue& npc);
+    void accept(Visitor& visitor) override;
 };
