@@ -31,7 +31,7 @@ private:
     double attack_range;
     std::shared_ptr<BaseNPC> cur_npc;
     NpcType cur_npc_type;
-    std::unique_ptr<std::vector<std::unique_ptr<Observer>>> observers;
+    std::vector<std::unique_ptr<Observer>>* observers;
     TypeVisitor type_visitor;
     bool are_alive(BaseNPC& npc1, BaseNPC& npc2);
     bool possibility_of_battle(BaseNPC& npc1, BaseNPC& npc2);
@@ -40,7 +40,7 @@ private:
 public:
     BattleVisitor(double attack_range, std::vector<std::unique_ptr<Observer>>* observers);
     void set_current_npc(std::shared_ptr<BaseNPC> npc);
-    void visit(Elf& elf) override;
-    void visit(Knight& knight) override;
-    void visit(Rogue& rogue) override;
+    void visit(Elf& killer) override;
+    void visit(Knight& killer) override;
+    void visit(Rogue& killer) override;
 };

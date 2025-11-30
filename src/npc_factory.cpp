@@ -20,37 +20,42 @@ std::string NpcFactory::get_uname(std::string base_name)
 }
 
 NpcFactory::NpcFactory()
-    : NpcFactory(5, 25, 25) {}
+    : NpcFactory(25, 25) {}
 
-NpcFactory::NpcFactory(double attack_range, int size_x, int size_y)
-    : attack_range(attack_range), size_x(size_x), size_y(size_y), counter{0, 0, 0} {}
+NpcFactory::NpcFactory(int size_x, int size_y)
+    : size_x(size_x), size_y(size_y), counter{0, 0, 0} {}
 
-std::shared_ptr<BaseNPC> NpcFactory::create_npc(const NpcType& npc)
+std::shared_ptr<BaseNPC> NpcFactory::create_npc(void)
 {
-    switch (npc) {
+    NpcType npc_type = static_cast<NpcType>(rng.get_int(0, 2));
+    return create_npc(npc_type);
+}
+
+std::shared_ptr<BaseNPC> NpcFactory::create_npc(const NpcType& npc_type)
+{
+    switch (npc_type) {
     case NpcType::elf:
         return std::make_shared<Elf>(
             get_uname("Elf"),
             get_position_x(),
-            get_position_y(),
-            attack_range
+            get_position_y()
         );
 
     case NpcType::knight:
         return std::make_shared<Knight>(
             get_uname("Knight"),
             get_position_x(),
-            get_position_y(),
-            attack_range
+            get_position_y()
         );
 
     case NpcType::rogue:
         return std::make_shared<Rogue>(
             get_uname("Rogue"),
             get_position_x(),
-            get_position_y(),
-            attack_range
+            get_position_y()
         );
+    default:
+        throw std::invalid_argument("Unknown NPC type");
     }
 }
 
@@ -70,7 +75,7 @@ std::vector<std::shared_ptr<BaseNPC>> NpcFactory::load_from_file(std::string& fi
     std::ifstream file(filename);
     std::string line;
 
-    std::regex pattern(R"([(\w+)] '(\w+)' at ((\d+), (\d+)))");
+    std::regex pattern(R"(\[(\w+)\] '([\w-]+)' at \((\d+), (\d+)\))");
     std::smatch matches;
 
     while (std::getline(file, line))
@@ -84,17 +89,17 @@ std::vector<std::shared_ptr<BaseNPC>> NpcFactory::load_from_file(std::string& fi
 
             if (npc_type_str == "Elf")
             {
-                npcs.push_back(std::make_shared<Elf>(name, x, y, attack_range));
+                npcs.push_back(std::make_shared<Elf>(name, x, y));
                 ++counter[NpcType::elf];
             }
             else if (npc_type_str == "Knight")
             {
-                npcs.push_back(std::make_shared<Knight>(name, x, y, attack_range));
+                npcs.push_back(std::make_shared<Knight>(name, x, y));
                 ++counter[NpcType::knight];
             }
             else if (npc_type_str == "Rogue")
             {
-                npcs.push_back(std::make_shared<Rogue>(name, x, y, attack_range));
+                npcs.push_back(std::make_shared<Rogue>(name, x, y));
                 ++counter[NpcType::rogue];
             }
         }

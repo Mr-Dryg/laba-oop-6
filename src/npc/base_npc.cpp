@@ -1,4 +1,4 @@
-#include "../include/npc.h"
+#include "../../include/npc.h"
 
 double BaseNPC::distance(Position pos1, Position pos2)
 {
@@ -7,9 +7,9 @@ double BaseNPC::distance(Position pos1, Position pos2)
     return sqrt(dx*dx + dy*dy);
 }
 
-BaseNPC::BaseNPC(std::string name, int x, int y, double attack_range)
+BaseNPC::BaseNPC(std::string name, int x, int y)
     : name(name), position(Position{x, y}), alive(true) {}
-
+    
 bool BaseNPC::is_near(BaseNPC& other, double attack_range)
 {
     return distance(position, other.position) <= attack_range;
@@ -30,7 +30,13 @@ std::ostream& operator<<(std::ostream& os, const BaseNPC::Position& position)
     return os << "(" << position.x << ", " << position.y << ")";
 }
 
+void BaseNPC::print(std::ostream& os) const
+{
+    os << "'" << name << "' at " << position;
+}
+
 std::ostream& operator<<(std::ostream& os, const BaseNPC& npc)
 {
-    return os << "'" << npc.name << "' at " << npc.position;
+    npc.print(os);
+    return os;
 }

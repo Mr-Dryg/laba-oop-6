@@ -1,4 +1,5 @@
 #include "../include/visitor.h"
+#include <iostream>
 #include <memory>
 
 NpcType& TypeVisitor::get_npc_type(void)
@@ -45,7 +46,7 @@ void BattleVisitor::murder(BaseNPC& killer, BaseNPC& victim)
 {
     victim.dies();
     for (const auto& observer : *observers)
-        observer->update(killer, victim);
+        observer->update(killer, *cur_npc);
 }
 
 void BattleVisitor::visit(Elf& elf)

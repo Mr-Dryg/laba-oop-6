@@ -11,7 +11,6 @@ private:
     RandomGenerator rng;
     int size_x;
     int size_y;
-    double attack_range;
     int counter[3];
     int get_position_x(void);
     int get_position_y(void);
@@ -19,8 +18,9 @@ private:
 
 public:
     NpcFactory();
-    NpcFactory(double attack_range, int size_x, int size_y);
-    std::shared_ptr<BaseNPC> create_npc(const NpcType& npc);
+    NpcFactory(int size_x, int size_y);
+    std::shared_ptr<BaseNPC> create_npc(void);
+    std::shared_ptr<BaseNPC> create_npc(const NpcType& npc_type);
     void save_to_file(std::vector<std::shared_ptr<BaseNPC>>& npcs, std::string& filename);
     std::vector<std::shared_ptr<BaseNPC>> load_from_file(std::string& filename);
 };

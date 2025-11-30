@@ -26,35 +26,37 @@ protected:
 
 public:
     BaseNPC() = default;
-    BaseNPC(std::string name, int x, int y, double attack_range);
+    BaseNPC(std::string name, int x, int y);
     bool is_near(BaseNPC& other, double attack_range);
     bool is_alive(void);
     void dies(void);
     friend std::ostream& operator<<(std::ostream& os, const Position& position);
-    friend std::ostream& operator<<(std::ostream& os, const BaseNPC& npc);
-    virtual void accept(Visitor& visitor);
+    virtual void print(std::ostream& os) const;
+    virtual void accept(Visitor& visitor) {;}
 };
+
+std::ostream& operator<<(std::ostream& os, const BaseNPC& npc);
 
 class Elf : public BaseNPC
 {
 public:
-    Elf(std::string name, int x, int y, double attack_range);
-    friend std::ostream& operator<<(std::ostream& os, const Elf& npc);
+    Elf(std::string name, int x, int y);
+    void print(std::ostream& os) const override;
     void accept(Visitor& visitor) override;
 };
 
 class Knight : public BaseNPC
 {
 public:
-    Knight(std::string name, int x, int y, double attack_range);
-    friend std::ostream& operator<<(std::ostream& os, const Knight& npc);
+    Knight(std::string name, int x, int y);
+    void print(std::ostream& os) const override;
     void accept(Visitor& visitor) override;
 };
 
 class Rogue : public BaseNPC
 {
 public:
-    Rogue(std::string name, int x, int y, double attack_range);
-    friend std::ostream& operator<<(std::ostream& os, const Rogue& npc);
+    Rogue(std::string name, int x, int y);
+    void print(std::ostream& os) const override;
     void accept(Visitor& visitor) override;
 };

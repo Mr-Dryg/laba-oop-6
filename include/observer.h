@@ -1,11 +1,15 @@
+#pragma once
 #include "npc.h"
 #include <fstream>
 #include <string>
 
 class Observer
 {
+protected:
+    void log_kill_event(std::ostream& os, BaseNPC& killer, BaseNPC& victim);
+
 public:
-    virtual void update(BaseNPC& killer, BaseNPC& victim) = 0;
+    virtual void update(BaseNPC& killer, BaseNPC& victim) =0;
 };
 
 class TerminalObserver : public Observer

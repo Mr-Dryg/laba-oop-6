@@ -1,11 +1,13 @@
 set(LIB_SOURCES
-  base_npc.cpp
-  elf.cppknight.cpp
+  dungeon_editor.cpp
+  npc/base_npc.cpp
+  npc/elf.cpp
+  npc/knight.cpp
+  npc/rogue.cpp
   npc_factory.cpp
   observer.cpp
   random_generator.cpp
-  rogue.cpp
   visitor.cpp
 )
 
-add_library(lib LIB_SOURCES)
+add_library(lib ${LIB_SOURCES})
