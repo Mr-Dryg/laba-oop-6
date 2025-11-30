@@ -5,8 +5,6 @@
 #include <string>
 #include <vector>
 
-enum NpcType {elf, knight, rogue};
-
 class NpcFactory
 {
 private:

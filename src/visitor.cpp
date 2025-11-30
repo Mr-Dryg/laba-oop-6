@@ -1,24 +1,82 @@
 #include "../include/visitor.h"
+#include <memory>
 
-Visitor::Visitor(double attack_range, Observer* observer, std::vector<std::shared_ptr<BaseNPC>>* npcs)
-    : attack_range(attack_range), observer(observer), npcs(npcs) {}
+NpcType& TypeVisitor::get_npc_type(void)
+{
+    return npc_type;
+}
 
-void Visitor::set_current_npc(std::shared_ptr<BaseNPC> npc)
+void TypeVisitor::visit(Elf& elf)
+{
+    npc_type = NpcType::elf;
+}
+
+void TypeVisitor::visit(Knight& knight)
+{
+    npc_type = NpcType::knight;
+}
+
+void TypeVisitor::visit(Rogue& rogue)
+{
+    npc_type = NpcType::rogue;
+}
+
+BattleVisitor::BattleVisitor(double attack_range, std::vector<std::unique_ptr<Observer>>* observers)
+    : attack_range(attack_range), observers(observers) {}
+
+void BattleVisitor::set_current_npc(std::shared_ptr<BaseNPC> npc)
 {
     cur_npc = npc;
+    npc->accept(type_visitor);
+    cur_npc_type = type_visitor.get_npc_type();
 }
 
-void Visitor::visit(Elf& other)
+bool BattleVisitor::are_alive(BaseNPC& npc1, BaseNPC& npc2)
 {
-    
+    return npc1.is_alive() && npc2.is_alive();
 }
 
-void Visitor::visit(Knight& other)
+bool BattleVisitor::possibility_of_battle(BaseNPC& npc1, BaseNPC& npc2)
 {
-    
+    return are_alive(npc1, npc2) && npc1.is_near(npc2, attack_range);
 }
 
-void Visitor::visit(Rogue& other)
+void BattleVisitor::murder(BaseNPC& killer, BaseNPC& victim)
 {
-    
+    victim.dies();
+    for (const auto& observer : *observers)
+        observer->update(killer, victim);
+}
+
+void BattleVisitor::visit(Elf& elf)
+{
+    if (!possibility_of_battle(*cur_npc, elf))
+        return;
+
+    if (cur_npc_type == NpcType::rogue)
+        murder(*cur_npc, elf);
+    else if (cur_npc_type == NpcType::knight)
+        murder(elf, *cur_npc);
+}
+
+void BattleVisitor::visit(Knight& knight)
+{
+    if (!possibility_of_battle(*cur_npc, knight))
+        return;
+
+    if (cur_npc_type == NpcType::elf)
+        murder(*cur_npc, knight);
+    else if (cur_npc_type == NpcType::rogue)
+        murder(knight, *cur_npc);
+}
+
+void BattleVisitor::visit(Rogue& rogue)
+{
+    if (!possibility_of_battle(*cur_npc, rogue))
+        return;
+
+    if (cur_npc_type == NpcType::knight)
+        murder(*cur_npc, rogue);
+    else if (cur_npc_type == NpcType::elf)
+        murder(rogue, *cur_npc);
 }

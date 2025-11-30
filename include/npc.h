@@ -6,6 +6,8 @@
 #include <string>
 #include <system_error>
 
+enum NpcType {elf, knight, rogue};
+
 class Visitor;
 
 class BaseNPC
@@ -16,15 +18,18 @@ private:
         int y;
     };
     static double distance(Position pos1, Position pos2);
+    bool alive;
 
 protected:
     Position position;
     std::string name;
 
 public:
+    BaseNPC() = default;
     BaseNPC(std::string name, int x, int y, double attack_range);
     bool is_near(BaseNPC& other, double attack_range);
-    void set_attack_range(double attack_range);
+    bool is_alive(void);
+    void dies(void);
     friend std::ostream& operator<<(std::ostream& os, const Position& position);
     friend std::ostream& operator<<(std::ostream& os, const BaseNPC& npc);
     virtual void accept(Visitor& visitor);

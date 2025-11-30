@@ -8,11 +8,21 @@ double BaseNPC::distance(Position pos1, Position pos2)
 }
 
 BaseNPC::BaseNPC(std::string name, int x, int y, double attack_range)
-    : name(name), position(Position{x, y}) {}
+    : name(name), position(Position{x, y}), alive(true) {}
 
 bool BaseNPC::is_near(BaseNPC& other, double attack_range)
 {
     return distance(position, other.position) <= attack_range;
+}
+
+bool BaseNPC::is_alive()
+{
+    return alive;
+}
+
+void BaseNPC::dies()
+{
+    alive = false;
 }
 
 std::ostream& operator<<(std::ostream& os, const BaseNPC::Position& position)

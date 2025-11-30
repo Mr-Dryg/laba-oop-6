@@ -2,6 +2,7 @@
 #include "npc.h"
 #include "observer.h"
 #include <memory>
+#include <vector>
 
 class Visitor
 {
@@ -11,18 +12,35 @@ public:
     virtual void visit(Rogue& rogue) = 0;
 };
 
+class TypeVisitor : public Visitor
+{
+private:
+    NpcType npc_type;
+
+public:
+    TypeVisitor() = default;
+    NpcType& get_npc_type(void);
+    void visit(Elf& elf);
+    void visit(Knight& knight);
+    void visit(Rogue& rogue);
+};
+
 class BattleVisitor : public Visitor
 {
 private:
-    std::shared_ptr<BaseNPC> cur_npc;
-    std::shared_ptr<Observer> observer;
     double attack_range;
-    std::unique_ptr<std::vector<std::shared_ptr<BaseNPC>>> npcs;
+    std::shared_ptr<BaseNPC> cur_npc;
+    NpcType cur_npc_type;
+    std::unique_ptr<std::vector<std::unique_ptr<Observer>>> observers;
+    TypeVisitor type_visitor;
+    bool are_alive(BaseNPC& npc1, BaseNPC& npc2);
+    bool possibility_of_battle(BaseNPC& npc1, BaseNPC& npc2);
+    void murder(BaseNPC& killer, BaseNPC& victim);
 
 public:
-    BattleVisitor(double attack_range, Observer* observer, std::vector<std::shared_ptr<BaseNPC>>* npcs);
+    BattleVisitor(double attack_range, std::vector<std::unique_ptr<Observer>>* observers);
     void set_current_npc(std::shared_ptr<BaseNPC> npc);
-    void visit(Elf& other) override;
-    void visit(Knight& other) override;
-    void visit(Rogue& other) override;
+    void visit(Elf& elf) override;
+    void visit(Knight& knight) override;
+    void visit(Rogue& rogue) override;
 };

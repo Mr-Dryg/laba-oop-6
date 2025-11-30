@@ -4,16 +4,14 @@
 
 class Observer
 {
-protected:
-    std::string get_log(BaseNPC& killer, BaseNPC& victim);
 public:
-    virtual void update(int value) = 0;
+    virtual void update(BaseNPC& killer, BaseNPC& victim) = 0;
 };
 
 class TerminalObserver : public Observer
 {
 public:
-    void update(BaseNPC& killer, BaseNPC& victim);
+    void update(BaseNPC& killer, BaseNPC& victim) override;
 };
 
 class LogObserver : public Observer
@@ -24,6 +22,6 @@ private:
 public:
     LogObserver();
     LogObserver(std::string filename);
-    void update(BaseNPC& killer, BaseNPC& victim);
+    void update(BaseNPC& killer, BaseNPC& victim) override;
     ~LogObserver();
 };
