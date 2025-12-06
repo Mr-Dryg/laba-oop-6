@@ -39,14 +39,17 @@ bool BattleVisitor::are_alive(BaseNPC& npc1, BaseNPC& npc2)
 
 bool BattleVisitor::possibility_of_battle(BaseNPC& npc1, BaseNPC& npc2)
 {
-    return are_alive(npc1, npc2) && npc1.is_near(npc2, attack_range);
+    bool cond1 = are_alive(npc1, npc2);
+    bool cond2 = npc1.is_near(npc2, attack_range);
+    bool cond3 = npc1.get_name() != npc2.get_name();
+    return cond1 && cond2 && cond3;
 }
 
 void BattleVisitor::murder(BaseNPC& killer, BaseNPC& victim)
 {
     victim.dies();
     for (const auto& observer : *observers)
-        observer->update(killer, *cur_npc);
+        observer->update(killer, victim);
 }
 
 void BattleVisitor::visit(Elf& elf)

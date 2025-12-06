@@ -30,6 +30,7 @@ public:
     bool is_near(BaseNPC& other, double attack_range);
     bool is_alive(void);
     void dies(void);
+    std::string get_name(void);
     friend std::ostream& operator<<(std::ostream& os, const Position& position);
     virtual void print(std::ostream& os) const;
     virtual void accept(Visitor& visitor) {;}

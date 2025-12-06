@@ -25,6 +25,11 @@ void BaseNPC::dies()
     alive = false;
 }
 
+std::string BaseNPC::get_name(void)
+{
+    return name;
+}
+
 std::ostream& operator<<(std::ostream& os, const BaseNPC::Position& position)
 {
     return os << "(" << position.x << ", " << position.y << ")";
