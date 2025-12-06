@@ -13,7 +13,7 @@ int main() {
     editor.print_npcs();
 
     std::cout << "\nBattle...\n";
-    editor.start_battle(100);
+    editor.start_battle(250);
 
     std::cout << "\nAfter battle:\n";
     editor.print_npcs();
